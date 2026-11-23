@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="mr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#176b3a">
+<meta name="description" content="MajhiSheti - शेतीचा खर्च, उत्पन्न आणि नोंदी">
+<link rel="manifest" href="manifest.json">
+<title>MajhiSheti | माझी शेती</title>
+<style>
+:root{--green:#176b3a;--green2:#e8f5ec;--ink:#183126;--muted:#607267;--line:#dce8df;--bg:#f5f8f5}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:system-ui,-apple-system,"Noto Sans Devanagari",sans-serif}
+header{background:linear-gradient(135deg,#145b32,#269451);color:white;padding:22px 18px 26px;border-radius:0 0 24px 24px}
+.head{max-width:1000px;margin:auto;display:flex;align-items:center;justify-content:space-between;gap:12px}
+.brand{display:flex;align-items:center;gap:12px}.logo{font-size:30px;background:#ffffff22;border-radius:14px;padding:9px}
+h1{font-size:24px;margin:0}header p{margin:5px 0 0;color:#e3f5e8;font-size:14px}
+button,.btn{border:0;border-radius:12px;padding:11px 15px;font:inherit;font-weight:650;cursor:pointer}
+.install{background:white;color:var(--green)}main{max-width:1000px;margin:18px auto;padding:0 14px 40px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:-2px}
+.stat,.panel,.tile{background:white;border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:0 2px 8px #163d2510}
+.stat small{color:var(--muted)}.stat strong{display:block;font-size:21px;margin-top:5px}
+.nav{display:flex;gap:8px;overflow:auto;margin:18px 0 14px;padding-bottom:3px}
+.nav button{white-space:nowrap;background:#e8f0ea;color:#315541}.nav button.active{background:var(--green);color:white}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+h2{font-size:18px;margin:0 0 13px}.panel{margin-bottom:14px}
+label{display:block;font-size:13px;color:var(--muted);margin:9px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cddbd1;border-radius:10px;font:inherit;background:white;color:var(--ink)}
+textarea{min-height:76px;resize:vertical}.primary{background:var(--green);color:white;margin-top:12px}.secondary{background:#eaf3ed;color:var(--green)}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.list{display:grid;gap:8px}.item{border:1px solid var(--line);border-radius:12px;padding:11px;display:flex;justify-content:space-between;gap:10px;align-items:center}
+.item small{display:block;color:var(--muted);margin-top:3px}.del{background:#fff0ee;color:#a23b30;padding:7px 10px}
+.tiles{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.tile{color:var(--ink);text-align:left}.tile span{font-size:23px;display:block;margin-bottom:5px}.tile small{color:var(--muted)}
+.hidden{display:none!important}.hint{font-size:12px;color:var(--muted);line-height:1.5}.empty{color:var(--muted);padding:12px;text-align:center}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:20px}
+@media(max-width:650px){.stats{grid-template-columns:1fr 1fr 1fr}.stat{padding:11px}.stat strong{font-size:16px}.grid{grid-template-columns:1fr}.tiles{grid-template-columns:1fr 1fr}.head{align-items:flex-start}h1{font-size:21px}}
+</style>
+</head>
+<body>
+<header><div class="head"><div class="brand"><div class="logo">🌱</div><div><h1>MajhiSheti</h1><p>माझी शेती • शेतीचा हिशोब, आता सोप्या पद्धतीने</p></div></div><button id="installBtn" class="install" hidden>अॅप Install करा</button></div></header>
+<main>
+<section class="stats">
+ <div class="stat"><small>एकूण खर्च</small><strong id="totalExpense">₹0</strong></div>
+ <div class="stat"><small>एकूण उत्पन्न</small><strong id="totalIncome">₹0</strong></div>
+ <div class="stat"><small>नफा / तोटा</small><strong id="profit">₹0</strong></div>
+</section>
+<nav class="nav">
+ <button class="active" data-tab="home">मुख्यपृष्ठ</button><button data-tab="money">खर्च-उत्पन्न</button><button data-tab="crop">पीक नोंद</button><button data-tab="spray">फवारणी नोंद</button><button data-tab="calc">नफा कॅल्क्युलेटर</button>
+</nav>
+<section id="home" class="tab">
+ <div class="panel"><h2>नमस्कार शेतकरी! 👋</h2><p>तुमच्या शेतीचा खर्च, उत्पन्न आणि कामांच्या नोंदी एका ठिकाणी ठेवा.</p>
+ <div class="tiles">
+  <button class="tile" data-go="money"><span>💰</span><b>खर्च-उत्पन्न</b><small>पैशांचा हिशोब</small></button>
+  <button class="tile" data-go="crop"><span>🌾</span><b>पीक नोंद</b><small>पिकाची माहिती</small></button>
+  <button class="tile" data-go="spray"><span>🚿</span><b>फवारणी नोंद</b><small>केलेल्या कामांची नोंद</small></button>
+ </div></div>
+ <div class="panel"><h2>अलीकडील नोंदी</h2><div id="recent" class="list"><div class="empty">अजून नोंदी नाहीत.</div></div></div>
+ <p class="hint">टीप: तुमच्या नोंदी या उपकरणाच्या ब्राउझरमध्ये साठवल्या जातात. अॅपचा डेटा हटवू नका; सध्या क्लाउड बॅकअप नाही.</p>
+</section>
+<section id="money" class="tab hidden">
+ <div class="grid"><div class="panel"><h2>नवीन व्यवहार जोडा</h2>
+ <label>व्यवहाराचा प्रकार</label><select id="kind"><option value="expense">खर्च</option><option value="income">उत्पन्न</option></select>
+ <label>तपशील</label><input id="desc" placeholder="उदा. बियाणे / सोयाबीन विक्री">
+ <div class="row"><div><label>रक्कम (₹)</label><input id="amount" type="number" min="1" placeholder="उदा. 1500"></div><div><label>तारीख</label><input id="date" type="date"></div></div>
+ <button class="primary" id="addMoney">नोंद जतन करा</button></div>
+ <div class="panel"><h2>सर्व व्यवहार</h2><div id="transactions" class="list"></div></div></div>
+</section>
+<section id="crop" class="tab hidden">
+ <div class="grid"><div class="panel"><h2>पीक माहिती जोडा</h2>
+ <label>पिकाचे नाव</label><input id="cropName" placeholder="उदा. सोयाबीन">
+ <div class="row"><div><label>क्षेत्र (एकर)</label><input id="area" type="number" min="0" step="0.1" placeholder="उदा. 2"></div><div><label>लागवड तारीख</label><input id="cropDate" type="date"></div></div>
+ <label>टीप</label><textarea id="cropNote" placeholder="वाण, पाणी, इतर माहिती"></textarea><button class="primary" id="addCrop">पीक नोंद जतन करा</button></div>
+ <div class="panel"><h2>माझी पिके</h2><div id="crops" class="list"></div></div></div>
+</section>
+<section id="spray" class="tab hidden">
+ <div class="grid"><div class="panel"><h2>फवारणी / खत नोंद</h2>
+ <label>पीक</label><input id="sprayCrop" placeholder="उदा. कापूस">
+ <label>काय वापरले? (नाव)</label><input id="sprayName" placeholder="खत / औषधाचे नाव">
+ <div class="row"><div><label>तारीख</label><input id="sprayDate" type="date"></div><div><label>टीप</label><input id="sprayNote" placeholder="प्रमाण इ."></div></div>
+ <button class="primary" id="addSpray">नोंद जतन करा</button>
+ <p class="hint">ही फक्त नोंद ठेवण्याची सुविधा आहे. औषध निवड किंवा डोससाठी कृषी तज्ज्ञांचा सल्ला घ्या आणि लेबल पाळा.</p></div>
+ <div class="panel"><h2>माझ्या नोंदी</h2><div id="sprays" class="list"></div></div></div>
+</section>
+<section id="calc" class="tab hidden">
+ <div class="panel" style="max-width:560px"><h2>शेती नफा कॅल्क्युलेटर</h2>
+ <label>एकूण विक्री / उत्पन्न (₹)</label><input id="calcIncome" type="number" min="0" placeholder="उदा. 50000">
+ <label>एकूण खर्च (₹)</label><input id="calcExpense" type="number" min="0" placeholder="उदा. 30000">
+ <button class="primary" id="calculate">हिशोब करा</button><h2 id="calcResult" style="margin-top:16px">नफा / तोटा: —</h2>
+ <p class="hint">नफा = उत्पन्न − खर्च. हा साधा हिशोब आहे; वाहतूक, मजुरी किंवा इतर खर्च वेगळे असतील तर तेही जोडा.</p></div>
+</section>
+<footer>MajhiSheti • आवृत्ती 1.0 • तुमच्या शेतीच्या नोंदी तुमच्या हातात</footer>
+</main>
+<script>
+const $=id=>document.getElementById(id);
+const today=new Date().toISOString().slice(0,10);['date','cropDate','sprayDate'].forEach(id=>$(id).value=today);
+let data={transactions:[],crops:[],sprays:[]};
+try{data=Object.assign(data,JSON.parse(localStorage.getItem('majhisheti-v1')||'{}'))}catch(e){}
+function save(){localStorage.setItem('majhisheti-v1',JSON.stringify(data));render()}
+function money(n){return '₹'+Number(n||0).toLocaleString('en-IN')}
+function safe(s){return String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]))}
+function empty(el,msg){$(el).innerHTML=`<div class="empty">${msg}</div>`}
+function del(type,id){data[type]=data[type].filter(x=>x.id!==id);save()}
+function item(title,sub,type,id,right=''){return `<div class="item"><div><b>${safe(title)}</b><small>${safe(sub)}</small>${right?`<small>${safe(right)}</small>`:''}</div><button class="del" onclick="del('${type}','${id}')">हटवा</button></div>`}
+function render(){
+ const ex=data.transactions.filter(x=>x.kind==='expense').reduce((s,x)=>s+Number(x.amount),0), inc=data.transactions.filter(x=>x.kind==='income').reduce((s,x)=>s+Number(x.amount),0);
+ $('totalExpense').textContent=money(ex);$('totalIncome').textContent=money(inc);$('profit').textContent=money(inc-ex);
+ $('transactions').innerHTML=data.transactions.length?data.transactions.slice().reverse().map(x=>item((x.kind==='expense'?'खर्च: ':'उत्पन्न: ')+x.desc,x.date+' • '+money(x.amount),'transactions',x.id)).join(''):'<div class="empty">अजून व्यवहार नाहीत.</div>';
+ $('crops').innerHTML=data.crops.length?data.crops.slice().reverse().map(x=>item(x.name,x.area+' एकर • '+x.date+' • '+x.note,'crops',x.id)).join(''):'<div class="empty">अजून पीक नोंद नाही.</div>';
+ $('sprays').innerHTML=data.sprays.length?data.sprays.slice().reverse().map(x=>item(x.crop+' — '+x.name,x.date+' • '+x.note,'sprays',x.id)).join(''):'<div class="empty">अजून नोंदी नाहीत.</div>';
+ let all=[...data.transactions.map(x=>({title:x.desc,sub:x.date+' • '+money(x.amount)})),...data.crops.map(x=>({title:x.name,sub:'पीक • '+x.date})),...data.sprays.map(x=>({title:x.crop+' — '+x.name,sub:'फवारणी/खत • '+x.date}))].slice(-5).reverse();
+ $('recent').innerHTML=all.length?all.map(x=>`<div class="item"><div><b>${safe(x.title)}</b><small>${safe(x.sub)}</small></div></div>`).join(''):'<div class="empty">अजून नोंदी नाहीत.</div>';
+}
+function id(){return Date.now().toString(36)+Math.random().toString(36).slice(2,6)}
+$('addMoney').onclick=()=>{let desc=$('desc').value.trim(),amount=Number($('amount').value);if(!desc||amount<=0||!$('date').value)return alert('तपशील, योग्य रक्कम आणि तारीख भरा.');data.transactions.push({id:id(),kind:$('kind').value,desc,amount,date:$('date').value});$('desc').value='';$('amount').value='';save()};
+$('addCrop').onclick=()=>{let name=$('cropName').value.trim();if(!name)return alert('पिकाचे नाव भरा.');data.crops.push({id:id(),name,area:$('area').value||'0',$date:$('cropDate').value,date:$('cropDate').value,note:$('cropNote').value});['cropName','area','cropNote'].forEach(x=>$(x).value='');save()};
+$('addSpray').onclick=()=>{let crop=$('sprayCrop').value.trim(),name=$('sprayName').value.trim();if(!crop||!name)return alert('पीक आणि वापरलेल्या वस्तूचे नाव भरा.');data.sprays.push({id:id(),crop,name,date:$('sprayDate').value,note:$('sprayNote').value});['sprayCrop','sprayName','sprayNote'].forEach(x=>$(x).value='');save()};
+$('calculate').onclick=()=>{let p=Number($('calcIncome').value)-Number($('calcExpense').value);$('calcResult').textContent=(p>=0?'नफा: ':'तोटा: ')+money(Math.abs(p))};
+function tab(name){document.querySelectorAll('.tab').forEach(x=>x.classList.toggle('hidden',x.id!==name));document.querySelectorAll('.nav button').forEach(x=>x.classList.toggle('active',x.dataset.tab===name));}
+document.querySelectorAll('[data-tab]').forEach(b=>b.onclick=()=>tab(b.dataset.tab));document.querySelectorAll('[data-go]').forEach(b=>b.onclick=()=>tab(b.dataset.go));
+let promptEvent;window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();promptEvent=e;$('installBtn').hidden=false});$('installBtn').onclick=async()=>{if(promptEvent){promptEvent.prompt();await promptEvent.userChoice;promptEvent=null}else alert('Chrome मेनूमधून “Add to Home screen” निवडा.')};
+if('serviceWorker' in navigator && location.protocol.startsWith('http'))navigator.serviceWorker.register('./sw.js').catch(()=>{});
+render();
+</script>
+</body></html>
